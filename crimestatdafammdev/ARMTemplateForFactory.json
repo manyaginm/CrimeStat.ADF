@@ -1,0 +1,461 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory Name",
+			"defaultValue": "crimestatdafammdev"
+		},
+		"AzureBlobStorage1_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "crimestatstorageaccname"
+		},
+		"AzureKeyVault1_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://crimestatistickvmmdev.vault.azure.net/"
+		},
+		"AzureKeyVault2_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://crimestatistickvmmdev.vault.azure.net/"
+		},
+		"AzureSqlDatabase1_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "crimestatdwhconnectionstring"
+		},
+		"crimestatstacapplinkedservice_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "crimestatstorageaccname"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/Copy-Countries-Staging')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy_xk0",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "/"
+							},
+							{
+								"name": "Destination",
+								"value": "[[stg].[Country_Code_Untyped]"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSetting",
+									"recursive": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSetting",
+									"skipLineCount": 0
+								}
+							},
+							"sink": {
+								"type": "AzureSqlSink"
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "name",
+											"type": "String"
+										},
+										"sink": {
+											"name": "Country_Name",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "alpha-2",
+											"type": "String"
+										},
+										"sink": {
+											"name": "Alpha2",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "alpha-3",
+											"type": "String"
+										},
+										"sink": {
+											"name": "Alpha3",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "country-code",
+											"type": "String"
+										},
+										"sink": {
+											"name": "CountryCode",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "iso_3166-2",
+											"type": "String"
+										},
+										"sink": {
+											"name": "Iso31662",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "region",
+											"type": "String"
+										},
+										"sink": {
+											"name": "Region",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "sub-region",
+											"type": "String"
+										},
+										"sink": {
+											"name": "SubRegion",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "intermediate-region",
+											"type": "String"
+										},
+										"sink": {
+											"name": "IntermidiateRegion",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "region-code",
+											"type": "String"
+										},
+										"sink": {
+											"name": "RegionCode",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "sub-region-code",
+											"type": "String"
+										},
+										"sink": {
+											"name": "SubRegionCode",
+											"type": "String"
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "SourceDataset_xk0",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "CrimeStatSQLdb",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/SourceDataset_xk0')]",
+				"[concat(variables('factoryId'), '/datasets/CrimeStatSQLdb')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CrimeStatSQLdb')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "CountryCodeKey",
+						"type": "int",
+						"precision": 10,
+						"scale": 255
+					},
+					{
+						"name": "Country_Name",
+						"type": "nvarchar",
+						"precision": 255,
+						"scale": 255
+					},
+					{
+						"name": "Alpha2",
+						"type": "nvarchar",
+						"precision": 255,
+						"scale": 255
+					},
+					{
+						"name": "Alpha3",
+						"type": "nvarchar",
+						"precision": 255,
+						"scale": 255
+					},
+					{
+						"name": "CountryCode",
+						"type": "nvarchar",
+						"precision": 255,
+						"scale": 255
+					},
+					{
+						"name": "Iso31662",
+						"type": "nvarchar",
+						"precision": 255,
+						"scale": 255
+					},
+					{
+						"name": "Region",
+						"type": "nvarchar",
+						"precision": 255,
+						"scale": 255
+					},
+					{
+						"name": "SubRegion",
+						"type": "nvarchar",
+						"precision": 255,
+						"scale": 255
+					},
+					{
+						"name": "IntermidiateRegion",
+						"type": "nvarchar",
+						"precision": 255,
+						"scale": 255
+					},
+					{
+						"name": "RegionCode",
+						"type": "nvarchar",
+						"precision": 255,
+						"scale": 255
+					},
+					{
+						"name": "SubRegionCode",
+						"type": "nvarchar",
+						"precision": 255,
+						"scale": 255
+					}
+				],
+				"typeProperties": {
+					"tableName": "[[stg].[Country_Code_Untyped]"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SourceDataset_xk0')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "crimestatstacapplinkedservice",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "ISOcountries.csv",
+						"folderPath": "CrimeStat.Source.Countries",
+						"container": "crimestat-sourcefiles"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "name",
+						"type": "String"
+					},
+					{
+						"name": "alpha-2",
+						"type": "String"
+					},
+					{
+						"name": "alpha-3",
+						"type": "String"
+					},
+					{
+						"name": "country-code",
+						"type": "String"
+					},
+					{
+						"name": "iso_3166-2",
+						"type": "String"
+					},
+					{
+						"name": "region",
+						"type": "String"
+					},
+					{
+						"name": "sub-region",
+						"type": "String"
+					},
+					{
+						"name": "intermediate-region",
+						"type": "String"
+					},
+					{
+						"name": "region-code",
+						"type": "String"
+					},
+					{
+						"name": "sub-region-code",
+						"type": "String"
+					},
+					{
+						"name": "intermediate-region-code",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/crimestatstacapplinkedservice')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureBlobStorage1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "AzureKeyVault2",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "[parameters('AzureBlobStorage1_properties_typeProperties_connectionString_secretName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureKeyVault2')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureKeyVault1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureKeyVault",
+				"typeProperties": {
+					"baseUrl": "[parameters('AzureKeyVault1_properties_typeProperties_baseUrl')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureKeyVault2')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureKeyVault",
+				"typeProperties": {
+					"baseUrl": "[parameters('AzureKeyVault2_properties_typeProperties_baseUrl')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureSqlDatabase1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "AzureKeyVault2",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "[parameters('AzureSqlDatabase1_properties_typeProperties_connectionString_secretName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureKeyVault2')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/crimestatstacapplinkedservice')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "AzureKeyVault2",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "[parameters('crimestatstacapplinkedservice_properties_typeProperties_connectionString_secretName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureKeyVault2')]"
+			]
+		}
+	]
+}

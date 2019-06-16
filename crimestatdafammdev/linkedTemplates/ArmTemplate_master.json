@@ -1,0 +1,77 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory Name",
+			"defaultValue": "crimestatdafammdev"
+		},
+		"AzureBlobStorage1_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "crimestatstorageaccname"
+		},
+		"AzureKeyVault1_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://crimestatistickvmmdev.vault.azure.net/"
+		},
+		"AzureKeyVault2_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://crimestatistickvmmdev.vault.azure.net/"
+		},
+		"AzureSqlDatabase1_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "crimestatdwhconnectionstring"
+		},
+		"crimestatstacapplinkedservice_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "crimestatstorageaccname"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas Token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"AzureKeyVault1_properties_typeProperties_baseUrl": {
+						"value": "[parameters('AzureKeyVault1_properties_typeProperties_baseUrl')]"
+					},
+					"AzureKeyVault2_properties_typeProperties_baseUrl": {
+						"value": "[parameters('AzureKeyVault2_properties_typeProperties_baseUrl')]"
+					},
+					"AzureBlobStorage1_properties_typeProperties_connectionString_secretName": {
+						"value": "[parameters('AzureBlobStorage1_properties_typeProperties_connectionString_secretName')]"
+					},
+					"AzureSqlDatabase1_properties_typeProperties_connectionString_secretName": {
+						"value": "[parameters('AzureSqlDatabase1_properties_typeProperties_connectionString_secretName')]"
+					},
+					"crimestatstacapplinkedservice_properties_typeProperties_connectionString_secretName": {
+						"value": "[parameters('crimestatstacapplinkedservice_properties_typeProperties_connectionString_secretName')]"
+					}
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}
