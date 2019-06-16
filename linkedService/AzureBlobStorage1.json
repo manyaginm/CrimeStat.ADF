@@ -1,0 +1,17 @@
+{
+	"name": "AzureBlobStorage1",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"type": "AzureBlobStorage",
+		"typeProperties": {
+			"connectionString": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "AzureKeyVault2",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "crimestatstorageaccname"
+			}
+		}
+	}
+}

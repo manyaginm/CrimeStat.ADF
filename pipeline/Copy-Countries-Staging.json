@@ -1,0 +1,163 @@
+{
+	"name": "Copy-Countries-Staging",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy_xk0",
+				"type": "Copy",
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "/"
+					},
+					{
+						"name": "Destination",
+						"value": "[stg].[Country_Code_Untyped]"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSetting",
+							"recursive": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSetting",
+							"skipLineCount": 0
+						}
+					},
+					"sink": {
+						"type": "AzureSqlSink"
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "name",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Country_Name",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "alpha-2",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Alpha2",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "alpha-3",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Alpha3",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "country-code",
+									"type": "String"
+								},
+								"sink": {
+									"name": "CountryCode",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "iso_3166-2",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Iso31662",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "region",
+									"type": "String"
+								},
+								"sink": {
+									"name": "Region",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "sub-region",
+									"type": "String"
+								},
+								"sink": {
+									"name": "SubRegion",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "intermediate-region",
+									"type": "String"
+								},
+								"sink": {
+									"name": "IntermidiateRegion",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "region-code",
+									"type": "String"
+								},
+								"sink": {
+									"name": "RegionCode",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "sub-region-code",
+									"type": "String"
+								},
+								"sink": {
+									"name": "SubRegionCode",
+									"type": "String"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SourceDataset_xk0",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DestinationDataset_xk0",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
