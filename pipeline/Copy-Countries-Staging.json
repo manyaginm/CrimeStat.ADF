@@ -152,7 +152,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "DestinationDataset_xk0",
+						"referenceName": "CrimeStatSQLdb",
 						"type": "DatasetReference"
 					}
 				]
