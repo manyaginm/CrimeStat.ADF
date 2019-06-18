@@ -15,7 +15,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderQuery": "\nSELECT [CountryCodeKey]\n      ,[Country_Name]\n      ,[Alpha2]\n      ,[Alpha3]\n      ,[CountryCode]\n      ,[Iso31662]\n      ,[Region]\n      ,[SubRegion]\n      ,[IntermidiateRegion]\n      ,[RegionCode]\n      ,[SubRegionCode]\n  FROM [stg].[Country_Code_Untyped]"
+						"sqlReaderQuery": "SELECT \n      [Alpha3] AS Id\n\t  ,[Country_Name]\n      ,[Alpha2]\n      \n      ,[CountryCode]\n      ,[Iso31662]\n      ,[Region]\n      ,[SubRegion]\n      ,[IntermidiateRegion]\n      ,[RegionCode]\n      ,[SubRegionCode]\n  FROM [stg].[Country_Code_Untyped]\nFOR JSON AUTO\n"
 					},
 					"sink": {
 						"type": "DocumentDbCollectionSink",
