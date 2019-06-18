@@ -1,0 +1,13 @@
+{
+	"name": "DocumentDbCollection1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "tutorilaCosmosDbLinkedServiceMMDev",
+			"type": "LinkedServiceReference"
+		},
+		"type": "DocumentDbCollection",
+		"typeProperties": {
+			"collectionName": "tutorialcosmosdatabaseone"
+		}
+	}
+}
