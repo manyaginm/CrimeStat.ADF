@@ -1,0 +1,16 @@
+{
+	"name": "tutorilaCosmosDbLinkedServiceMMDev",
+	"properties": {
+		"type": "CosmosDb",
+		"typeProperties": {
+			"connectionString": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "tutorailCosmosDbLinkedServiceMMDeb",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "tutorialcosmosdbcnstrmmdev"
+			}
+		}
+	}
+}
