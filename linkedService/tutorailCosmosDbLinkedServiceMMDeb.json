@@ -1,0 +1,9 @@
+{
+	"name": "tutorailCosmosDbLinkedServiceMMDeb",
+	"properties": {
+		"type": "AzureKeyVault",
+		"typeProperties": {
+			"baseUrl": "https://tutorialcosmosdbkvmmdev.vault.azure.net/"
+		}
+	}
+}
